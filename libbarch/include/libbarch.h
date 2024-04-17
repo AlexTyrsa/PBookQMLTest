@@ -29,6 +29,7 @@ class BarchCompressor
 {
 public:
     BarchCompressor(const RawImageData& inData);
+    BarchCompressor(const std::vector<uint8_t>& inSerializedData);
 
     std::vector<uint8_t> Serialize() const;
 
@@ -38,6 +39,7 @@ public:
 
 private:
     void DoCompress(const RawImageData& inData);
+    void DeSerialize(const std::vector<uint8_t>& inSerializedData);
 
 private:
     int32_t               width;            // image width in pixels

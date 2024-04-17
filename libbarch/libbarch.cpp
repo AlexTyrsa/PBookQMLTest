@@ -52,6 +52,11 @@ BarchCompressor::BarchCompressor(const RawImageData &inData) : width(inData.GetW
     DoCompress(inData);
 }
 
+BarchCompressor::BarchCompressor(const std::vector<uint8_t> &inSerializedData)
+{
+    DeSerialize(inSerializedData);
+}
+
 std::vector<uint8_t> BarchCompressor::Serialize() const
 {
     std::vector<uint8_t> result;
@@ -116,3 +121,52 @@ void BarchCompressor::DoCompress(const RawImageData &inData)
 
     indexBitmask.flush();
 }
+
+void BarchCompressor::DeSerialize(const std::vector<uint8_t> &inSerializedData)
+{
+    if(!inSerializedData.empty())
+    {
+        barch_header_ex header;
+        int32_t read_handle = 0;
+
+        if(inSerializedData.size() > sizeof(barch_header_ex))
+        {
+            std::copy(inSerializedData.begin(), inSerializedData.begin() + sizeof(barch_header_ex), header.raw_data);
+
+            read_handle = sizeof(barch_header_ex);
+
+            if(header.header.id[0] == 'B' && header.header.id[1] == 'A' && header.header.height > 0 && header.header.width > 0)
+            {
+                width = header.header.width;
+                height = header.header.height;
+
+                int32_t indexSize = height / 8 + (height % 8 == 0 ? 0 : 1);
+
+                if(inSerializedData.size() > read_handle + indexSize)
+                {
+                    index.reserve(indexSize);
+                    std::copy(inSerializedData.begin() + read_handle, inSerializedData.begin() + read_handle + indexSize, std::back_insert_iterator<std::vector<uint8_t>>(index));
+
+                    read_handle += indexSize;
+
+                    data.reserve(inSerializedData.size() - read_handle);
+                    std::copy(inSerializedData.begin() + read_handle, inSerializedData.end(), std::back_insert_iterator<std::vector<uint8_t>>(data));
+
+                    return;
+                }
+            }
+        }
+    }
+
+    throw std::runtime_error("BarchCompressor::DeSerialize - incorrect data");
+}
+
+
+
+
+
+
+
+
+
+
