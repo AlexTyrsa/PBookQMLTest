@@ -16,6 +16,16 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        QFileListData.h
+        QFileListData.cpp
+        QFileListDataItemI.h
+        QFileListDataItemI.cpp
+        QFileListDataItem.h
+        QFileListDataItem.cpp
+        QFileListDataItemImg.h
+        QFileListDataItemImg.cpp
+        QFileListDataItemBarch.h
+        QFileListDataItemBarch.cpp
         qml.qrc
 )
 
