@@ -25,6 +25,17 @@ const QList<QFileListDataItemI*> &QFileListData::getItems() const
     return mItems;
 }
 
+QFileListDataItemI *QFileListData::getSelected() const
+{
+    for(QFileListDataItemI* item : mItems)
+    {
+        if(item && item->getSelected())
+            return item;
+    }
+
+    return nullptr;
+}
+
 void QFileListData::dispatchFiles(const QString &inDir)
 {
     QDir dir(inDir);
@@ -33,13 +44,40 @@ void QFileListData::dispatchFiles(const QString &inDir)
 
     for (const QFileInfo &file : dir.entryInfoList({"*.png", "*.bmp", "*.barch"}, QDir::Files))
     {
+        QFileListDataItemI* item = nullptr;
+
         if(file.suffix() == "barch")
-            mItems.push_back(new QFileListDataItemBarch(id, file.absoluteFilePath(), this));
+            item = new QFileListDataItemBarch(id, file.absoluteFilePath(), this);
         else
-            mItems.push_back(new QFileListDataItemImg(id, file.absoluteFilePath(), this));
+            item = new QFileListDataItemImg(id, file.absoluteFilePath(), this);
+
+        mItems.push_back(item);
+
+        QObject::connect(item, SIGNAL(requestSetSelected(int,bool)), this, SLOT(onRequestSetSelected(int,bool)));
 
         ++id;
     }
+}
+
+void QFileListData::onRequestSetSelected(int inId, bool inSelected)
+{
+    QFileListDataItemI* selectedItem = nullptr;
+
+    for(QFileListDataItemI* item : mItems)
+    {
+        if(item && item->getId() == inId)
+        {
+            item->setSelected(true);
+
+            selectedItem = item;
+        }
+        else
+        {
+            item->setSelected(false);
+        }
+    }
+
+    emit selectedChanged(selectedItem);
 }
 
 qsizetype QFileListData::itemsCount(QQmlListProperty<QFileListDataItemI> *inProperty)

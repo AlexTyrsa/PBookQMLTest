@@ -10,6 +10,7 @@ public:
     QFileListDataItem(int inID, const QString& inSrc, QObject* parent = nullptr);
 
     QString getDestination() const override;
+    qint64 getDestinationSize() const override;
 
     int getStatus() const override;
     QString getStatusDescription() const override;
@@ -20,9 +21,15 @@ public slots:
 protected:
     virtual void process() = 0;
 
-protected:
+    void setStatus(int inStatus);
+    void setDest(const QString& inDest);
+    void setDestSize(qint64 inDstSize);
+    void setStatusDescr(const QString& inSDescr);
+
+private:
     int mStatus;
     QString mDst;
     QString mStatusDescr;
+    qint64  mDstSize;
 
 };
