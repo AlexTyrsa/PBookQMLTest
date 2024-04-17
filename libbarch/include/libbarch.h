@@ -7,6 +7,11 @@ class RawImageData
 {
 public:
     RawImageData(int32_t inWidth, int32_t inHeight, uint8_t* inData);
+    RawImageData(const RawImageData& inData);
+    RawImageData(const RawImageData&& inData);
+
+    RawImageData& operator =(const RawImageData& inData);
+    RawImageData& operator =(const RawImageData&& inData);
 
     int32_t GetWidth() const;
     int32_t GetHeight() const;
@@ -15,8 +20,6 @@ public:
     uint32_t GetDataSize() const;
 
     RawImageData() = delete;
-    RawImageData(const RawImageData&) = delete;
-    RawImageData& operator =(const RawImageData&) = delete;
 
 private:
     int32_t                width;            // image width in pixels
@@ -32,6 +35,7 @@ public:
     BarchCompressor(const std::vector<uint8_t>& inSerializedData);
 
     std::vector<uint8_t> Serialize() const;
+    RawImageData DeCompress() const;
 
     BarchCompressor() = delete;
     BarchCompressor(const BarchCompressor&) = delete;

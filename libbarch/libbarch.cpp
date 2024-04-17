@@ -27,6 +27,34 @@ RawImageData::RawImageData(int32_t inWidth, int32_t inHeight, uint8_t *inData) :
         throw std::runtime_error("RawImageData::RawImageData - bad input params");
 }
 
+RawImageData::RawImageData(const RawImageData &inData) : width(inData.GetWidth()), height(inData.GetHeight()), data(inData.GetData())
+{
+
+}
+
+RawImageData::RawImageData(const RawImageData &&inData) : width(inData.GetWidth()), height(inData.GetHeight()), data(std::move(inData.data))
+{
+
+}
+
+RawImageData &RawImageData::operator =(const RawImageData &inData)
+{
+    width = inData.GetWidth();
+    height = inData.GetHeight();
+    data = inData.GetData();
+
+    return *this;
+}
+
+RawImageData &RawImageData::operator =(const RawImageData &&inData)
+{
+    width = inData.GetWidth();
+    height = inData.GetHeight();
+    data = std::move(inData.data);
+
+    return *this;
+}
+
 int32_t RawImageData::GetWidth() const
 {
     return width;
@@ -72,6 +100,51 @@ std::vector<uint8_t> BarchCompressor::Serialize() const
     return result;
 }
 
+RawImageData BarchCompressor::DeCompress() const
+{
+    std::vector<uint8_t> result(width * height + cChunkSize, cEmptyPixel); //filled with empty color
+    uint8_t* resultPtr = result.data();
+
+    i_vector_to_bitmask indexBitmask(index);
+    i_vector_to_bitmask dataBitmask(data);
+
+    int32_t chunksCount = width / cChunkSize + (width % cChunkSize == 0 ? 0 : 1);
+
+    for(int32_t row = 0; row < height; ++row)
+    {
+        uint8_t* rowStart = resultPtr + width * row;
+        chunk_type_t* rowChunked = reinterpret_cast<chunk_type_t*>(rowStart);
+
+        bool isEmpty = indexBitmask.pop();
+
+        if(!isEmpty)
+        {
+            for(int32_t chunkIndex = 0; chunkIndex < chunksCount; ++chunkIndex)
+            {
+                if(dataBitmask.pop())
+                {
+                    //at least one 1
+                    if(dataBitmask.pop())
+                    {
+                        //11
+                        rowChunked[chunkIndex] = dataBitmask.popDataChunk();
+                    }else
+                    {
+                        //10
+                        rowChunked[chunkIndex] = cFilledChunk;
+                    }
+                }
+            }
+            //0 mean empty, nothing to do
+        }
+
+        dataBitmask.drop();
+    }//else... already empty, nothing to do
+
+
+    return RawImageData(width, height, result.data());
+}
+
 bool IsRowEmpty(const chunk_type_t* begin, const chunk_type_t* end)
 {
     for(const chunk_type_t* i = begin; i != end; ++i)
@@ -83,8 +156,8 @@ bool IsRowEmpty(const chunk_type_t* begin, const chunk_type_t* end)
 
 void BarchCompressor::DoCompress(const RawImageData &inData)
 {
-    vector_to_bitmask indexBitmask(index);
-    vector_to_bitmask dataBitmask(data);
+    o_vector_to_bitmask indexBitmask(index);
+    o_vector_to_bitmask dataBitmask(data);
 
     for(int32_t row = 0; row < inData.GetHeight(); ++row)
     {
@@ -160,13 +233,3 @@ void BarchCompressor::DeSerialize(const std::vector<uint8_t> &inSerializedData)
 
     throw std::runtime_error("BarchCompressor::DeSerialize - incorrect data");
 }
-
-
-
-
-
-
-
-
-
-

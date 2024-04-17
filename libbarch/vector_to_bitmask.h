@@ -4,10 +4,10 @@
 
 #include <vector>
 
-class vector_to_bitmask
+class o_vector_to_bitmask
 {
 public:
-    vector_to_bitmask(std::vector<uint8_t>& inData);
+    o_vector_to_bitmask(std::vector<uint8_t>& inData);
 
     void push0();
     void push1();
@@ -24,5 +24,28 @@ private:
 
     uint8_t chunk;
     int32_t chunkIndex;
+
+};
+
+class i_vector_to_bitmask
+{
+public:
+    i_vector_to_bitmask(const std::vector<uint8_t>& inData);
+
+    bool pop();
+    chunk_type_t popDataChunk();
+
+    bool isPopPossible() const;
+
+    void drop();
+
+private:
+    void checkIndex();
+
+private:
+    const std::vector<uint8_t>& data;
+
+    int32_t chunkIndex;
+    int32_t dataIndex;
 
 };

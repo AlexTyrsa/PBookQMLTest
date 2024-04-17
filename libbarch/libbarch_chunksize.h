@@ -21,5 +21,9 @@ template<> struct chunk_type<8>
 };
 
 typedef chunk_type<cChunkSize>::type chunk_type_t;
-static const chunk_type_t cEmptyChunk = chunk_type<cChunkSize>::empty_val;
+
+static const chunk_type_t cEmptyChunk  = chunk_type<cChunkSize>::empty_val;
 static const chunk_type_t cFilledChunk = chunk_type<cChunkSize>::filled_val;
+
+static const uint8_t cEmptyPixel  = 0xFF;
+static const uint8_t cFilledPixel = 0;
