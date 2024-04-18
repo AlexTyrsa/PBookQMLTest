@@ -2,7 +2,7 @@
 
 #include <QThread>
 
-QFileListDataItem::QFileListDataItem(int inID, const QString& inSrc, QObject *parent) : QFileListDataItemI(inID, inSrc, parent), mStatus(EQFileListDataItemStatus_Ready), mDstSize(0)
+QFileListDataItem::QFileListDataItem(int inID, const QString& inSrc, QObject *parent) : QFileListDataItemI(inID, inSrc, parent), mStatus(EQFileListDataItemStatus_Ready), mDstSize(0), mStatusDescr("Ok")
 {
 
 }
@@ -49,6 +49,7 @@ void QFileListDataItem::setStatus(int inStatus)
         mStatus = inStatus;
 
         emit statusChanged(getStatus());
+        emit destinationChanged(getDestination());
     }
 }
 

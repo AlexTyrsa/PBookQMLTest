@@ -12,7 +12,10 @@ Item
     {
         id: fileList
 
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: selectedFile.bottom
 
         model: dataList.items.length
 
@@ -26,5 +29,19 @@ Item
             backColor: index % 2 == 0 ? '#202020' : '#505050'
             textColor: dataItem.selected ? '#6565FF' : '#FFFFFF'
         }
+    }
+
+    QC_FileSelectedItemView
+    {
+        id: selectedFile
+
+        dataItem: dataList.selected
+
+        backColor: 'grey'
+        height: 100
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 }
