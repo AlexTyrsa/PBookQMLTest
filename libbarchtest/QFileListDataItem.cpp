@@ -81,3 +81,8 @@ void QFileListDataItem::setStatusDescr(const QString &inSDescr)
         emit statusDescriptionChanged(getStatusDescription());
     }
 }
+
+QString QFileListDataItem::getDst() const
+{
+    return mDst;
+}

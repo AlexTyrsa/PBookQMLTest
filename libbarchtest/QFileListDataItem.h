@@ -26,6 +26,8 @@ protected:
     void setDestSize(qint64 inDstSize);
     void setStatusDescr(const QString& inSDescr);
 
+    QString getDst() const;
+
 private:
     int mStatus;
     QString mDst;
