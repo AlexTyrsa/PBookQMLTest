@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>QC_FileView.qml</file>
+        <file>QC_FileItemView.qml</file>
     </qresource>
 </RCC>

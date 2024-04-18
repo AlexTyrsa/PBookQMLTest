@@ -1,7 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickItem>
 
-#include "libbarch.h"
+#include "QFileListData.h"
+#include "QFileListDataItemI.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +11,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QGuiApplication app(argc, argv);
+
+    qmlRegisterType<QFileListData>("QFileListLib", 1, 0, "QFileListData");
+    qmlRegisterUncreatableType<QFileListDataItemI>("QFileListLib", 1, 0, "QFileListDataItemI", "Interface");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -19,6 +24,12 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
 
     engine.load(url);
+
+    QObject* rootObj = engine.rootObjects().at(0);
+    QObject* viewObj = rootObj->findChild<QQuickItem*>("fileView");
+
+    if(viewObj)
+        viewObj->setProperty("dataList", QVariant::fromValue(new QFileListData("/Volumes/Transcend/")));
 
     return app.exec();
 }

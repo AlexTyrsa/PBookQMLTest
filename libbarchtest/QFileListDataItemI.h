@@ -25,11 +25,13 @@ public:
 public:
     enum EQFileListDataItemStatus
     {
-        eQFileListDataItemStatus_Ready,
-        eQFileListDataItemStatus_InProgress,
-        eQFileListDataItemStatus_Complete,
-        eQFileListDataItemStatus_Fail
+        EQFileListDataItemStatus_Ready,
+        EQFileListDataItemStatus_InProgress,
+        EQFileListDataItemStatus_Complete,
+        EQFileListDataItemStatus_Fail
     };
+
+    Q_ENUM(EQFileListDataItemStatus)
 
 public:
     QFileListDataItemI(int inID, const QString& inSrc, QObject* parent = nullptr);

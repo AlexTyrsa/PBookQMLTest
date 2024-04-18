@@ -2,14 +2,14 @@
 
 #include <QThread>
 
-QFileListDataItem::QFileListDataItem(int inID, const QString& inSrc, QObject *parent) : QFileListDataItemI(inID, inSrc, parent), mStatus(eQFileListDataItemStatus_Ready), mDstSize(0)
+QFileListDataItem::QFileListDataItem(int inID, const QString& inSrc, QObject *parent) : QFileListDataItemI(inID, inSrc, parent), mStatus(EQFileListDataItemStatus_Ready), mDstSize(0)
 {
 
 }
 
 QString QFileListDataItem::getDestination() const
 {
-    if(getStatus() != eQFileListDataItemStatus_Complete)
+    if(getStatus() != EQFileListDataItemStatus_Complete)
         return QString();
     else
         return mDst;
@@ -32,9 +32,14 @@ QString QFileListDataItem::getStatusDescription() const
 
 void QFileListDataItem::processItem()
 {
-    QThread* thread = QThread::create(&QFileListDataItem::process, this);
+    if(getStatus() == EQFileListDataItemStatus_Ready)
+    {
+        QThread* thread = QThread::create(&QFileListDataItem::process, this);
 
-    QObject::connect(this, SIGNAL(destroyed(QObject)), thread, SLOT(terminate()));
+        QObject::connect(this, SIGNAL(destroyed(QObject*)), thread, SLOT(terminate()));
+
+        thread->start();
+    }
 }
 
 void QFileListDataItem::setStatus(int inStatus)

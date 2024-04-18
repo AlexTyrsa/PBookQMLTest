@@ -15,7 +15,7 @@ public:
     Q_PROPERTY(QFileListDataItemI* selected READ getSelected NOTIFY selectedChanged)
 
 public:
-    QFileListData(const QString& inPath, QObject* parent = nullptr);
+    QFileListData(const QString& inPath = "", QObject* parent = nullptr);
 
     QString gePath() const;
 

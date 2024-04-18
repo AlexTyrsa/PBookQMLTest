@@ -9,7 +9,7 @@ QFileListDataItemBarch::QFileListDataItemBarch(int inID, const QString& inSrc, Q
     QDir dir = file.absoluteDir();
     QString fileName = file.baseName();
 
-    setDest(QFileInfo(dir, fileName + ".bmp").absoluteFilePath());
+    setDest(QFileInfo(dir, fileName + "unpacked.bmp").absoluteFilePath());
 }
 
 QString QFileListDataItemBarch::getPreview() const
