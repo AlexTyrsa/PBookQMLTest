@@ -79,12 +79,12 @@ chunk_type_t i_vector_to_bitmask::popDataChunk()
 
     for(int32_t i = 0; i < cChunkSize * 8; ++i)     //can be optimized
     {
-        result <<= 1;
+        result >>= 1;
 
         bool val = pop();
 
         if(val)
-            result |= 1;
+            result |= 0x80000000;
     }
 
     return result;
@@ -97,8 +97,11 @@ bool i_vector_to_bitmask::isPopPossible() const
 
 void i_vector_to_bitmask::drop()
 {
-    chunkIndex = 0;
-    ++dataIndex;
+    if(chunkIndex != 0)
+    {
+        chunkIndex = 0;
+        ++dataIndex;
+    }
 }
 
 void i_vector_to_bitmask::checkIndex()
