@@ -12,7 +12,7 @@ QFileListDataItemBarch::QFileListDataItemBarch(int inID, const QString& inSrc, Q
     QDir dir = file.absoluteDir();
     QString fileName = file.baseName();
 
-    setDest(QFileInfo(dir, fileName + "unpacked.bmp").absoluteFilePath());
+    setDest(QFileInfo(dir, fileName + "_unpacked.bmp").absoluteFilePath());
 }
 
 QString QFileListDataItemBarch::getPreview() const
@@ -51,6 +51,15 @@ void QFileListDataItemBarch::process()
         try
         {
             RawImageData imageData(std::move(BarchCompressor(compressedData).DeCompress()));
+
+            const std::vector<uint8_t>& imageDataVector = imageData.GetData();
+
+            dstImage = QImage(imageData.GetWidth(), imageData.GetHeight(), QImage::Format_Grayscale8);
+
+            for(int row = 0; row < imageData.GetHeight(); ++row)
+            {
+                std::copy(imageDataVector.begin() + row * imageData.GetWidth(), imageDataVector.begin() + (row + 1) * imageData.GetWidth(), dstImage.scanLine(row));
+            }
 
             dstImage = QImage(imageData.GetData().data(), imageData.GetWidth(), imageData.GetHeight(), QImage::Format_Grayscale8);
         }catch(std::exception& e)

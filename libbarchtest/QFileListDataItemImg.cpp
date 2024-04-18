@@ -39,7 +39,14 @@ void QFileListDataItemImg::process()
 
         try
         {
-             compressedData = BarchCompressor(RawImageData(srcImage.width(), srcImage.height(), srcImage.bits())).Serialize();
+            std::vector<uint8_t> imgData(srcImage.width() * srcImage.height());
+
+            for(int row = 0; row < srcImage.height(); ++row)
+            {
+                std::copy(srcImage.scanLine(row), srcImage.scanLine(row) + srcImage.width(), imgData.begin() + srcImage.width() * row);
+            }
+
+            compressedData = BarchCompressor(RawImageData(srcImage.width(), srcImage.height(), srcImage.bits())).Serialize();
         }catch(std::exception& e)
         {
             setStatusDescr(e.what());

@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QFileListLib 1.0
+import QtQuick.Controls 2.1
 import '.'
 
 Item
@@ -16,6 +17,13 @@ Item
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: selectedFile.bottom
+
+        flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: Flickable.StopAtBounds
+
+        clip: true
+
+        ScrollBar.vertical: ScrollBar {}
 
         model: dataList.items.length
 
@@ -36,6 +44,8 @@ Item
         id: selectedFile
 
         dataItem: dataList.selected
+
+        visible: dataItem
 
         backColor: 'grey'
         height: 100

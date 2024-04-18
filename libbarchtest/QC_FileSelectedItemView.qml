@@ -31,7 +31,7 @@ Item
 
                 color: textColor
 
-                text: "Status: " + dataItem.statusDescription
+                text: "Status: " + (dataItem ? dataItem.statusDescription : "")
             }
 
             RowLayout
@@ -42,7 +42,7 @@ Item
                 Text
                 {
                     color: textColor
-                    text: "Src: " + dataItem.source
+                    text: "Src: " + (dataItem ? dataItem.source : "")
 
                     elide: Text.ElideLeft
 
@@ -53,7 +53,7 @@ Item
                 Text
                 {
                     color: textColor
-                    text: Math.floor(dataItem.sourceSize / 1024) + ' Kb'
+                    text: Math.floor((dataItem ? dataItem.sourceSize : 0) / 1024) + ' Kb'
                     horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignRight
@@ -68,7 +68,7 @@ Item
                 Text
                 {
                     color: textColor
-                    text: "Dst: " + dataItem.destination
+                    text: "Dst: " + (dataItem ? dataItem.destination : "")
 
                     elide: Text.ElideLeft
 
@@ -79,7 +79,7 @@ Item
                 Text
                 {
                     color: textColor
-                    text: Math.floor(dataItem.destinationSize / 1024) + ' Kb'
+                    text: Math.floor((dataItem ? dataItem.destinationSize : 0) / 1024) + ' Kb'
                     horizontalAlignment: Text.AlignRight
 
                     Layout.alignment: Qt.AlignRight
