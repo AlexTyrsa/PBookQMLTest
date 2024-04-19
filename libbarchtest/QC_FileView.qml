@@ -39,7 +39,7 @@ Item
             backColor: index % 2 == 0 ? '#202020' : '#505050'
             textColor: dataItem.selected ? '#6565FF' : '#FFFFFF'
 
-            onFailed:
+            onFailed: (what) =>
             {
                 root.failed(dataItem.source, what);
             }

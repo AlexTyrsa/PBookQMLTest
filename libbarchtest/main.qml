@@ -21,7 +21,7 @@ Window
 
         dataList: QFileListData{}
 
-        onFailed:
+        onFailed: (file, what) =>
         {
             errorDialog.text = "File: " + file + "\n" + "Message: " + what;
             errorDialog.open();
