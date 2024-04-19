@@ -4,5 +4,6 @@
         <file>QC_FileView.qml</file>
         <file>QC_FileItemView.qml</file>
         <file>QC_FileSelectedItemView.qml</file>
+		<file>QC_ErrorDialog.qml</file>
     </qresource>
 </RCC>

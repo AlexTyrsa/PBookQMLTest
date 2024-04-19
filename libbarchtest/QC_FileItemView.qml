@@ -10,6 +10,8 @@ Item
     property color textColor: 'black'
     property color backColor: "white"
 
+    signal failed(string what)
+
     implicitHeight: 25
 
     Rectangle
@@ -56,7 +58,10 @@ Item
                     {
                         name: "fail"
                         when: dataItem.status == QFileListDataItemI.EQFileListDataItemStatus_Fail
-                        PropertyChanges { target: textStatus; text: "Fail"}
+                        changes:[
+                                    PropertyChanges{target: textStatus; text: "Fail"},
+                                    StateChangeScript{ script: root.failed(dataItem.statusDescription)}
+                                ]
                     }
                 ]
 

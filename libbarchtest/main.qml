@@ -20,5 +20,18 @@ Window
         anchors.margins: 20
 
         dataList: QFileListData{}
+
+        onFailed:
+        {
+            errorDialog.text = "File: " + file + "\n" + "Message: " + what;
+            errorDialog.open();
+        }
+    }
+
+    QC_ErrorDialog
+    {
+        id: errorDialog
+
+        anchors.centerIn: parent
     }
 }

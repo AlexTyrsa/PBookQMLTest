@@ -9,6 +9,8 @@ Item
 
     property QFileListData dataList
 
+    signal failed(string file, string what)
+
     ListView
     {
         id: fileList
@@ -36,6 +38,11 @@ Item
 
             backColor: index % 2 == 0 ? '#202020' : '#505050'
             textColor: dataItem.selected ? '#6565FF' : '#FFFFFF'
+
+            onFailed:
+            {
+                root.failed(dataItem.source, what);
+            }
         }
     }
 
